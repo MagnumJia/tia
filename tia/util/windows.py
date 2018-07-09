@@ -106,7 +106,7 @@ class WinSCPBatch(object):
         #import subprocess as sub
         #p = sub.Popen(cmd, stdout=sub.PIPE, stderr=sub.PIPE)
         #output, errors = p.communicate()
-        #print output
+        #print(output)
 
 
 

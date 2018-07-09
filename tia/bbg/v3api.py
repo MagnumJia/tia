@@ -1,5 +1,6 @@
 from collections import defaultdict, namedtuple
 from datetime import datetime
+from six import string_types
 
 import blpapi
 import pandas as pd
@@ -67,7 +68,7 @@ class XmlHelper(object):
     def as_value(ele):
         """ convert the specified element as a python value """
         dtype = ele.datatype()
-        # print '%s = %s' % (ele.name(), dtype)
+        # print('%s = %s' % (ele.name(), dtype))
         if dtype in (1, 2, 3, 4, 5, 6, 7, 9, 12):
             # BOOL, CHAR, BYTE, INT32, INT64, FLOAT32, FLOAT64, BYTEARRAY, DECIMAL)
             return ele.getValue()
@@ -183,11 +184,11 @@ class XmlHelper(object):
 
 
 def debug_event(evt):
-    print 'unhandled event: %s' % evt.EventType
+    print('unhandled event: %s' % evt.EventType)
     if evt.EventType in [blpapi.Event.RESPONSE, blpapi.Event.PARTIAL_RESPONSE]:
-        print 'messages:'
+        print('messages:')
         for msg in XmlHelper.message_iter(evt):
-            print msg.Print
+            print(msg.Print)
 
 
 class Request(object):
@@ -301,8 +302,8 @@ class HistoricalDataRequest(Request):
                          ignore_field_error=ignore_field_error)
         period = period or 'DAILY'
         assert period in ('DAILY', 'WEEKLY', 'MONTHLY', 'QUARTERLY', 'SEMI_ANNUALLY', 'YEARLY')
-        self.is_single_sid = is_single_sid = isinstance(sids, basestring)
-        self.is_single_field = is_single_field = isinstance(fields, basestring)
+        self.is_single_sid = is_single_sid = isinstance(sids, string_types)
+        self.is_single_field = is_single_field = isinstance(fields, string_types)
         self.sids = is_single_sid and [sids] or list(sids)
         self.fields = is_single_field and [fields] or list(fields)
         self.end = end = pd.to_datetime(end) if end else pd.Timestamp.now()
@@ -418,10 +419,10 @@ class ReferenceDataRequest(Request):
         """
         Request.__init__(self, '//blp/refdata', ignore_security_error=ignore_security_error,
                          ignore_field_error=ignore_field_error)
-        self.is_single_sid = is_single_sid = isinstance(sids, basestring)
-        self.is_single_field = is_single_field = isinstance(fields, basestring)
-        self.sids = isinstance(sids, basestring) and [sids] or sids
-        self.fields = isinstance(fields, basestring) and [fields] or fields
+        self.is_single_sid = is_single_sid = isinstance(sids, string_types)
+        self.is_single_field = is_single_field = isinstance(fields, string_types)
+        self.sids = isinstance(sids, string_types) and [sids] or sids
+        self.fields = isinstance(fields, string_types) and [fields] or fields
         self.return_formatted_value = return_formatted_value
         self.use_utc_time = use_utc_time
         self.overrides = overrides
@@ -485,7 +486,7 @@ class IntradayTickRequest(Request):
         """
         Request.__init__(self, '//blp/refdata')
         self.sid = sid
-        self.events = isinstance(events, basestring) and [events] or events
+        self.events = isinstance(events, string_types) and [events] or events
         self.include_condition_codes = include_condition_codes
         self.include_nonplottable_events = include_nonplottable_events
         self.include_exchange_codes = include_exchange_codes
@@ -774,8 +775,8 @@ class Terminal(object):
 
 class SyncSubscription(object):
     def __init__(self, tickers, fields, interval=None, host='localhost', port=8194):
-        self.fields = isinstance(fields, basestring) and [fields] or fields
-        self.tickers = isinstance(tickers, basestring) and [tickers] or tickers
+        self.fields = isinstance(fields, string_types) and [fields] or fields
+        self.tickers = isinstance(tickers, string_types) and [tickers] or tickers
         self.interval = interval
         self.host = host
         self.port = port
